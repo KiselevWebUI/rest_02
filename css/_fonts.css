@@ -1,0 +1,13 @@
+@font-face {
+  font-family: "LatoR";
+  src: url("../font/Lato-Regular.woff2") format("woff2"), url("../fonts/Lato-Regular.woff") format("woff");
+}
+
+@font-face {
+  font-family: "LatoB";
+  src: url("../font/Lato-Bold.woff2") format("woff2"), url("../font/Lato-Bold.woff") format("woff");
+}
+
+@supports (-webkit-appearance:none) {
+
+}
