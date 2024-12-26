@@ -1,10 +1,10 @@
-document.addEventListener("DOMContentLoaded", ()=>{
+
 
     const latest_news = document.querySelector('.latest_news');
     const chart_slider = document.querySelector('.chart_slider');
     const sections_legend = document.querySelector('.sections_legend');
-    let chartExt = null;
-    let chartExtPallete = null;
+    var chartExt = null;
+    var chartExtPallete = null;
 
     function newsPage(){
         const newsForMore = [];
@@ -34,41 +34,40 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
         slider_content.addEventListener("click", (event) => {
             if(event.target.dataset && event.target.dataset.key){
-                this.curBlock = parseInt(event.target.dataset.key.split(':')[0]);
+                curBlock = parseInt(event.target.dataset.key.split(':')[0]);
                 slider_content.innerHTML = '';
-                this.drawSlider(this.curBlock);
+                drawSlider(curBlock);
                 setChart(chartSource[event.target.dataset.key]);
             }
         });
 
         button_black_arrow_left.addEventListener("click", (event) => {
-            let block = this.chartItemsFromCurMonth.pop();
-            this.chartItemsFromCurMonth.unshift(block);
+            let block = chartItemsFromCurMonth.pop();
+            chartItemsFromCurMonth.unshift(block);
             slider_content.innerHTML = '';
-            this.drawSlider(this.curBlock);
+            drawSlider(curBlock);
         });
 
         button_black_arrow_right.addEventListener("click", (event) => {
-            let block = this.chartItemsFromCurMonth.shift();
-            this.chartItemsFromCurMonth.push(block);
+            let block = chartItemsFromCurMonth.shift();
+            chartItemsFromCurMonth.push(block);
             slider_content.innerHTML = '';
-            this.drawSlider(this.curBlock);
+            drawSlider(curBlock);
         });
 
         window.addEventListener("resize", (event) => {
-            clearTimeout(this.resizeStart);
+            clearTimeout(resizeStart);
             slider_content.innerHTML = '';
-            this.resizeStart = setTimeout(()=>{
-                this.drawSlider(this.curBlock);
+            resizeStart = setTimeout(()=>{
+                drawSlider(curBlock);
             }, 100)
         });
 
-        this.resizeStart = null;
+        let resizeStart = null;
         const curMonth = new Date().getMonth();
         
-
-        this.curBlock = curMonth;
-        this.chartItemsFromCurMonth = updateChartItems(this.curBlock);
+        let curBlock = curMonth;
+        let chartItemsFromCurMonth = updateChartItems(curBlock);
 
         function updateChartItems(curM){
             let start = chartItems.slice(0, curM-1);
@@ -76,7 +75,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             return end.concat(start);
         }
 
-        this.drawSlider = function (){
+        let drawSlider = function (){
             const chart_slider_width = chart_slider.offsetWidth;
             const slider_content_width = slider_content.offsetWidth;
             const button_black_arrow_left_width = button_black_arrow_left.offsetWidth;
@@ -85,17 +84,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
     
             let str = '';
             
-            this.chartItemsFromCurMonth.forEach((item, index) => {
-                if(index < items) str += `<a href="javascript:void(0)" data-key="${item.key}" class="slider_block ${ item.id === this.curBlock ? 'slider_block_active' : ''}">${item.name}</a>`;
+            chartItemsFromCurMonth.forEach((item, index) => {
+                if(index < items) str += `<a data-key="${item.key}" class="slider_block ${ item.id === curBlock ? 'slider_block_active' : ''}">${item.name}</a>`;
             })
     
             slider_content.insertAdjacentHTML("beforeEnd", str);
         }
 
-        this.drawSlider(this.curBlock);
+        drawSlider(curBlock);
 
-        const curSourceId = this.chartItemsFromCurMonth.find((item)=>{
-          return item.id === this.curBlock;
+        const curSourceId = chartItemsFromCurMonth.find((item)=>{
+          return item.id === curBlock;
         })
         initChart(chartSource[curSourceId.key]);
         initSectionsLegend(chartSource[curSourceId.key]);
@@ -157,8 +156,5 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     if(latest_news) newsPage();
 
-    if(chart_slider){
-        chartPage();
-    }
+    if(chart_slider) chartPage();
     
-});
